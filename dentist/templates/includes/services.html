@@ -1,37 +1,189 @@
-<!-- templates/includes/services.html -->
 {% load static %}
-<section id="services" class="py-5 bg-light">
+<section id="services" class="py-5 bg-light position-relative">
     <div class="container">
         <h2 class="text-center mb-5">Our Dental Services</h2>
-        <div class="row">
-            <div class="col-md-4 mb-4">
-                <div class="card shadow-sm">
-                    <!-- <img src="https://via.placeholder.com/500x300" class="card-img-top" alt="Service 1"> -->
-                    <img src="{% static 'images/teeth-whitening.jpg' %}" class="card-img-top" alt="Teeth Whitening">
-                    <div class="card-body">
-                        <h5 class="card-title">Teeth Whitening</h5>
-                        <p class="card-text">Achieve a brighter, whiter smile with our safe and effective treatments.</p>
+
+        <div class="carousel-container">
+            <!-- Arrows closer to carousel -->
+            <button class="carousel-btn carousel-prev">&lt;</button>
+
+            <div class="services-carousel">
+                <div class="carousel-wrapper">
+                    <!-- Service Items -->
+                    <div class="service-card">
+                        <img src="{% static 'images/teeth-whitening.jpg' %}" alt="Teeth Whitening">
+                        <h5>Teeth Whitening</h5>
+                        <p>Achieve a brighter, whiter smile with our safe and effective treatments.</p>
+                    </div>
+                    <div class="service-card">
+                        <img src="{% static 'images/cosmetic-dentistry.jpg' %}" alt="Cosmetic Dentistry">
+                        <h5>Cosmetic Dentistry</h5>
+                        <p>Transform your smile with veneers, bonding, and cosmetic procedures.</p>
+                    </div>
+                    <div class="service-card">
+                        <img src="{% static 'images/pediatric-dentistry.jpg' %}" alt="Pediatric Dentistry">
+                        <h5>Pediatric Dentistry</h5>
+                        <p>Providing gentle care for your little ones with expert services.</p>
+                    </div>
+                    <div class="service-card">
+                        <img src="{% static 'images/dental-implants.jpg' %}" alt="Dental Implants">
+                        <h5>Dental Implants</h5>
+                        <p>Replace missing teeth with strong and durable implants.</p>
+                    </div>
+                    <div class="service-card">
+                        <img src="{% static 'images/orthodontics.jpg' %}" alt="Orthodontics">
+                        <h5>Orthodontics</h5>
+                        <p>Straighten your teeth with braces and aligners for a perfect smile.</p>
+                    </div>
+                    <div class="service-card">
+                        <img src="{% static 'images/root-canal.jpg' %}" alt="Root Canal Treatment">
+                        <h5>Root Canal Treatment</h5>
+                        <p>Save infected teeth with painless root canal procedures.</p>
                     </div>
                 </div>
             </div>
-            <div class="col-md-4 mb-4">
-                <div class="card shadow-sm">
-                    <img src="{% static 'images/cosmetic-dentistry.jpg' %}" class="card-img-top" alt="Cosmetic Dentistry">
-                    <div class="card-body">
-                        <h5 class="card-title">Cosmetic Dentistry</h5>
-                        <p class="card-text">Transform your smile with veneers, bonding, and cosmetic procedures.</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4 mb-4">
-                <div class="card shadow-sm">
-                    <img src="{% static 'images/pediatric-dentistry.jpg' %}" class="card-img-top" alt="Pediatric Dentistry">
-                    <div class="card-body">
-                        <h5 class="card-title">Pediatric Dentistry</h5>
-                        <p class="card-text">Providing gentle care for your little ones with expert services.</p>
-                    </div>
-                </div>
-            </div>
+
+            <button class="carousel-btn carousel-next">&gt;</button>
         </div>
     </div>
 </section>
+
+<!-- JavaScript for Auto-Rotating Infinite Scroll Carousel -->
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+    const carousel = document.querySelector(".carousel-wrapper");
+    const prevBtn = document.querySelector(".carousel-prev");
+    const nextBtn = document.querySelector(".carousel-next");
+
+    let autoScroll;
+    const scrollStep = 320; // Scroll amount per step
+    const scrollSpeed = 3000; // Time between each scroll
+
+    function startAutoScroll() {
+        autoScroll = setInterval(() => {
+            moveNext();
+        }, scrollSpeed);
+    }
+
+    function stopAutoScroll() {
+        clearInterval(autoScroll);
+    }
+
+    function restartAutoScroll() {
+        stopAutoScroll();
+        setTimeout(startAutoScroll, 5000);
+    }
+
+    function moveNext() {
+        // Check if the carousel has reached the end and reset it to the start
+        if (carousel.scrollLeft + carousel.offsetWidth >= carousel.scrollWidth) {
+            carousel.scrollTo({ left: 0, behavior: "smooth" });
+        } else {
+            carousel.scrollBy({ left: scrollStep, behavior: "smooth" });
+        }
+    }
+
+    function movePrev() {
+        // Check if the carousel is at the beginning and scroll to the last item
+        if (carousel.scrollLeft === 0) {
+            carousel.scrollTo({ left: carousel.scrollWidth, behavior: "smooth" });
+        } else {
+            carousel.scrollBy({ left: -scrollStep, behavior: "smooth" });
+        }
+    }
+
+    nextBtn.addEventListener("click", () => {
+        moveNext();
+        restartAutoScroll();
+    });
+
+    prevBtn.addEventListener("click", () => {
+        movePrev();
+        restartAutoScroll();
+    });
+
+    carousel.addEventListener("mouseenter", stopAutoScroll);
+    carousel.addEventListener("mouseleave", restartAutoScroll);
+
+    startAutoScroll();
+});
+
+</script>
+
+<!-- CSS -->
+<style>
+    .carousel-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        width: 100%;
+        margin-top: -40px;
+    }
+
+    .services-carousel {
+        overflow: hidden;
+        width: 90%;
+        position: relative;
+        padding: 10px 0;
+    }
+
+    .carousel-wrapper {
+        display: flex;
+        gap: 20px;
+        overflow-x: auto;
+        scroll-behavior: smooth;
+        scrollbar-width: none;
+    }
+
+    .carousel-wrapper::-webkit-scrollbar {
+        display: none;
+    }
+
+    .service-card {
+        flex: 0 0 auto;
+        width: 300px;
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        padding: 15px;
+        text-align: center;
+        transition: transform 0.3s ease-in-out;
+    }
+
+    .service-card img {
+        width: 100%;
+        height: 180px;
+        border-radius: 10px;
+        object-fit: cover;
+    }
+
+    
+    /* Align arrows inside the carousel */
+    .carousel-btn {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        background: rgba(0, 0, 0, 0.6);
+        color: white;
+        border: none;
+        padding: 10px 15px;
+        cursor: pointer;
+        border-radius: 50%;
+        font-size: 20px;
+        z-index: 10;
+    }
+
+    /* Move arrows closer to the carousel */
+    .carousel-prev {
+        left: 2%;  /* Adjust this value for more left */
+    }
+
+    .carousel-next {
+        right: 1%;  /* Adjust this value for more right */
+    }
+
+    .carousel-btn:hover {
+        background: rgba(0, 0, 0, 0.4);
+    }
+</style>
